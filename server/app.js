@@ -7,7 +7,7 @@ var cors = require('cors')
 var fb = require('fb')
 var mongoose = require('mongoose')
 require('dotenv').config()
-mongoose.connection.openUri('mongodb://localhost:27017/admin');
+mongoose.connection.openUri('mongodb://localhost:27017/todo');
 mongoose.Promise = global.Promise;
 mongoose.connection.once('open', () => {
   console.log('mongoose connection success');

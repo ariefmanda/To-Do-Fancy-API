@@ -2,7 +2,7 @@ const todo = require('../models/todo');
 module.exports = {
   find:(req,res,next)=>{
     todo.find({
-      UserId:"5a7ee393d5e4a52208c58ee7"
+      UserId:req.decoded._id
     })
       .then(data=>{
         res.send({
@@ -16,7 +16,7 @@ module.exports = {
   },
   create:(req,res,next)=>{
     todo.create({
-      UserId: req.decode._id,
+      UserId: req.decoded._id,
       content: req.body.content,
       ceklist:0
     })
@@ -46,7 +46,7 @@ module.exports = {
   },
   updateCeklist:(req,res,next)=>{
     todo.findByIdAndUpdate(req.params.id,{
-      ceklist:req.body.ceklist
+      ceklist:1
     },{new:true})
     .then(data=>{
       res.send({

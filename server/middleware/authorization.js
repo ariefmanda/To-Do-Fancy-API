@@ -4,7 +4,7 @@ module.exports = (req,res,next)=>{
   var decode = jsonwebtoken.verify(req.headers.token, process.env.secretjwt)
   console.log(decode);
   if(decode.name!=='JsonWebTokenError'){
-    req.decode=decode.dataU
+    req.decoded=decode.user
     next()
   }else{
     next({
