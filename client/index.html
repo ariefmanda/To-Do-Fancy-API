@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="asset/js/jquery.js"></script>
+    <script src="asset/js/axios.js"></script>
+    <script src="js/facebook.js"></script>
+    <script>
+            $(document).ready(function() {
+                if(localStorage.getItem('fbtoken')){
+                    $("#gettingstarted").html(
+                        `<a style="cursor:pointer;" class="nav-link" onclick="logout()">Logout</a>`
+                    );
+                    $("#todolist").show()
+                    terbang()
+                    $("#formadd").hide();
+                    if(!localStorage.getItem('token')){
+                        logout()
+                    }
+                }else{
+                    $("#gettingstarted").html(`<a style="cursor:pointer;" class="nav-link" onclick="isLogin()"> Getting Start
+                    </a>`);
+                    $("#todolist").hide()
+                }
+            })
+        </script>
+    <script src="asset/js/ui-kit.js"></script>
+    <script src="asset/js/ui-kit-icon.js"></script>
+    <link rel="stylesheet" href="asset/css/ui-kit.css" />
+    <link rel="stylesheet" href="asset/css/bootstrap.css" />
+    <link rel="stylesheet" href="asset/css/now-ui-kit.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-white">
+        <div class="container">
+                <i id="foto">
+                    </i>
+            <div class="navbar-translate">
+                <i id="fotobayang">
+                </i> 
+                <a class="navbar-brand">
+                        &nbsp&nbsp toDO <i id="name"></i>
+                </a>
+
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                </button>
+            </div>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                <ul class="navbar-nav">
+                    <li class="nav-item active" id="gettingstarted">
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="section" id="todolist">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <h3>
+                        Welcome to Todo Task
+                    </h3>
+                </div>
+                <div class="col-md-8 ml-auto mr-auto">
+                    <table class="uk-table uk-table-striped center">
+                        <thead>
+                            <th>tanggal</th>
+                            <th>success</th>
+                            <th>jobs</th>
+                            <th>action</th>
+                        </thead>
+                        <tbody id="tableTask">
+                            
+                        </tbody>
+                        <tfoot>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <i uk-icon="icon: plus" onclick="formadd()" id="iconadd"></i>
+                            </td>
+                        </tfoot>
+                    </table>
+                    <div id="formadd">
+                            <input class="uk-input uk-width-1-2" type="text" placeholder="add job" id="inputTodo">
+                            <button class="uk-button uk-button-primary" onclick="add()">add</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
