@@ -7,7 +7,6 @@ var authorization = require('../middleware/authorization')
 router.get('/', authorization, todo.find);
 router.post('/', authorization, todo.create);
 router.put('/:id', authorization, todo.updateCeklist);
-router.put('/:id', authorization, todo.updateContent);
 router.delete('/:id', authorization, todo.destroy);
 
 module.exports = router;

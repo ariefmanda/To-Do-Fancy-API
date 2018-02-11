@@ -45,8 +45,9 @@ module.exports = {
     })
   },
   updateCeklist:(req,res,next)=>{
+    console.log(req.params,req.body, 'edit ceklist');
     todo.findByIdAndUpdate(req.params.id,{
-      ceklist:1
+      ceklist: req.body.ceklist
     },{new:true})
     .then(data=>{
       res.send({

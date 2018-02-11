@@ -8,18 +8,8 @@ window.fbAsyncInit = function() {
   });
   FB.getLoginStatus(function(response) {
     console.log(response);
-    if (response.authResponse) {
-      $("#gettingstarted").html(
-        `<a style="cursor:pointer;" class="nav-link" onclick="logout()">Logout</a>`
-      );
-    } else {
-      $("#gettingstarted")
-        .html(`<a style="cursor:pointer;" class="nav-link" onclick="isLogin()"> Getting Start
-    </a>`);
-    }
   });
 };
-
 // Load the SDK asynchronously
 (function(d, s, id) {
   var js,
@@ -35,47 +25,11 @@ function isLogin() {
   FB.login(
     function(response) {
       if (response.authResponse) {
-        axios
-          .get("http://localhost:3000/api/auth", {
-            headers: {
-              fbtoken: response.authResponse.accessToken
-            }
-          })
-          .then(data => {
-            $("#name").html(`${data.data.name}`);
-            localStorage.setItem("token", data.data.token);
-            localStorage.setItem("email", data.data.email);
-            localStorage.setItem("image_url", data.data.image_url);
-            $("#formadd").hide();
-            axios
-              .get("http://localhost:3000/api/todo", {
-                headers: {
-                  token: data.data.token
-                }
-              })
-              .then(data => {
-                data = data.data.data;
-                data.map(e => {
-                  $("#tableTask").append(`
-          <tr>
-          <td> ${data.created_at}</td>
-          <td>
-                  <input onclick="success(${data._id},${
-                    data.ceklist
-                  })" class="checkbox" type="checkbox">
-          </td>
-          <td> ${data.content}</td>
-          <td>
-              <span uk-icon="icon: trash" onclick="destroy(${data._id})"></span>
-          </td>
-      </tr>
-          `);
-                });
-              })
-              .catch(err => console.log(err));
-          })
-          .catch(err => console.log(err));
-        // window.location = "index.html";
+        console.log('islogin connect',response);
+        localStorage.setItem("fbtoken", response.authResponse.accessToken);
+        window.location.href = window.location.href
+      }else{
+        console.log(response,'belum connect');
       }
     },
     { scope: "public_profile,email" }
@@ -84,21 +38,107 @@ function isLogin() {
 function logout() {
   FB.logout(function() {
     localStorage.clear();
+    window.history.back
     window.location = "index.html";
   });
 }
 
-function open(response) {}
-// function close() {
-//
-//     // window.location = "index.html";
-// }
 function formadd() {
   $("#formadd").show();
   $("#iconadd").hide();
 }
 
 function add() {
+  axios.post("http://localhost:3000/api/todo",{
+      content : $('#inputTodo').val()
+  },{
+    headers:{
+      token:localStorage.getItem('token')
+    }
+  }).then(data=>{
+    data=data.data.data
+    $("#tableTask").append(`
+    <tr>
+          <td> ${data.createdAt}</td>
+          <td>
+          <span uk-icon="icon: check" onclick="success('${data._id}','${data.ceklist}')"></span>
+          </td>
+          <td> ${data.content}</td>
+          <td>
+              <span uk-icon="icon: trash" onclick="destroy('${data._id}')"></span>
+          </td>
+      </tr>
+    `)
+  }).catch(err=>{
+    console.log(err);
+  })
   $("#formadd").hide();
   $("#iconadd").show();
+}
+function destroy(id) {
+  axios.delete(`http://localhost:3000/api/todo/${id}`,{
+    headers:{
+      token:localStorage.getItem('token')
+    }
+  }).then(data=>{
+    console.log(data);
+    dataTodo()
+  }).catch(err=>{
+    console.log(err);
+  })
+}
+function success(id,ceklist) {
+    axios.put(`http://localhost:3000/api/todo/${id}`,{
+      ceklist: ceklist==0?1:0
+    },{
+      headers:{
+        token:localStorage.getItem('token')
+      }
+    }).then(data=>{
+      dataTodo()
+    })
+    .catch(err=>console.log(err))
+}
+function dataTodo() {
+  axios
+    .get("http://localhost:3000/api/auth", {
+      headers: {
+        fbtoken: localStorage.getItem("fbtoken")
+      }
+    })
+    .then(data => {
+      $("#name").html(`${data.data.name}`);
+      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("email", data.data.email);
+      localStorage.setItem("image_url", data.data.image_url);
+      $("#formadd").hide();
+      console.log(data);
+      axios
+        .get("http://localhost:3000/api/todo", {
+          headers: {
+            token: data.data.token
+          }
+        })
+        .then(datatodo => {
+          data = datatodo.data.data;
+          $("#tableTask").html('')
+          data.map(e => {
+            $("#tableTask").append(`
+          <tr>
+          <td> ${e.createdAt}</td>
+          <td>
+          <span uk-icon="icon: check" onclick="success('${e._id}','${e.ceklist}')"></span>
+          </td>
+          <td> ${(e.ceklist==0)?e.content:`<strike>${e.content}</strike>` }</td>
+          <td>
+              <span uk-icon="icon: trash" onclick="destroy('${e._id}')"></span>
+          </td>
+      </tr>
+          `);
+          })
+          console.log(data);
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
 }
