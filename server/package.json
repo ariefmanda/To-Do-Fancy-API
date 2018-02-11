@@ -6,6 +6,9 @@
     "dev": "nodemon ./bin/www",
     "start": "node ./bin/www"
   },
+  "engines":{
+    "node":"8.9.1"
+  },
   "dependencies": {
     "body-parser": "~1.18.2",
     "boom": "^7.1.1",

@@ -99,7 +99,13 @@ function success(id,ceklist) {
     })
     .catch(err=>console.log(err))
 }
-function dataTodo() {
+function terbang() {
+  dataLogin(cb=>{
+    dataTodo()
+  })
+}
+
+function dataLogin(cb) {
   axios
     .get("http://localhost:3000/api/auth", {
       headers: {
@@ -111,12 +117,20 @@ function dataTodo() {
       localStorage.setItem("token", data.data.token);
       localStorage.setItem("email", data.data.email);
       localStorage.setItem("image_url", data.data.image_url);
+      $("#foto").html(`<img alt="foto" src="${localStorage.getItem('image_url')}" class="rounded-circle"/>`)
       $("#formadd").hide();
       console.log(data);
+      cb(data)
+    })
+    .catch(err => cb(err));
+}
+function dataTodo() {
+  console.log('dataTodo');
+  
       axios
         .get("http://localhost:3000/api/todo", {
           headers: {
-            token: data.data.token
+            token: localStorage.getItem('token')
           }
         })
         .then(datatodo => {
@@ -139,6 +153,5 @@ function dataTodo() {
           console.log(data);
         })
         .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
+ 
 }
